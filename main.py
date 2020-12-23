@@ -17,7 +17,7 @@ def crackDictionaireSha1():
         for line in fileobj:
             line = line.strip()
             if hashlib.sha1(line.encode()).hexdigest() == hashed:
-                print("The passwoooord is %s") % (line);
+                print("The passssswoooord is %s") % (line);
                 return ""
     print("Failed to crack the hash!")
 
