@@ -10,6 +10,16 @@ print(""" ____    ___                    __      __
   \ \ \L\ \\_\ \_/\ \L\.\_/\ \__/\ \ \\`\\ \ \L\ \ \ \_\ \ \ \/ /\ \/\ \ 
    \ \____//\____\ \__/.\_\ \____\\ \_\ \_\ \_,__/\ \____/\ \_\ \ \_\ \_\
     \/___/ \/____/\/__/\/_/\/____/ \/_/\/_/\/___/  \/___/  \/_/  \/_/\/_/""")
+def crackDictionaireSha1():
+    dict_file = input("Saire le path de la dictionnaire : ")
+    hashed = input("Saisire le Hash : ")
+    with open(dict_file) as fileobj:
+        for line in fileobj:
+            line = line.strip()
+            if hashlib.sha1(line.encode()).hexdigest() == hashed:
+                print("The password is %s") % (line);
+                return ""
+    print("Failed to crack the hash!")
 
 def crackDictionaireMD5():
     dict_file = input("Saire le path de la dictionnaire : ")
@@ -21,7 +31,26 @@ def crackDictionaireMD5():
                 print("Successfully cracked the hash %s: It's %s" % (hashed, line))
                 return ""
     print("Failed to crack the file.")
-
+def crackDictionaireSHA256():
+    dict_file = input("Saire le path de la dictionnaire : ")
+    hashed = input("Saisire le Hash : ")
+    with open(dict_file) as fileobj:
+        for line in fileobj:
+            line = line.strip()
+            if hashlib.sha256(line).hexdigest() == hashed :
+                print("Successfully cracked the hash %s: It's %s" % (hashed, line))
+                return ""
+    print("Failed to crack the file.")
+def crackDictionaireSHA512():
+    dict_file = input("Saire le path de la dictionnaire : ")
+    hashed = input("Saisire le Hash : ")
+    with open(dict_file) as fileobj:
+        for line in fileobj:
+            line = line.strip()
+            if hashlib.sha512(line).hexdigest() == hashed :
+                print("Successfully cracked the hash %s: It's %s" % (hashed, line))
+                return ""
+    print("Failed to crack the file.")
 def menu_principal():
     print("Welcome")
     print("1 - Codage et decodage d'un message")
@@ -91,8 +120,21 @@ def menu_principal():
 
     elif choix == "3":
         print("Crackage d'un message hashé")
-
-        crackDictionaireMD5()
+        print("1 - SHA1")
+        print("2 - SHA256")
+        print("3 - SHA512")
+        print("4 - MD5")
+        choix = input("Choisire le type Hash")
+        if choix == "1":
+            crackDictionaireSha1()
+        elif choix == "2":
+            crackDictionaireSHA256()
+        elif choix == "3":
+            crackDictionaireSHA512()
+        elif choix == "4":
+            crackDictionaireMD5()
+        else:
+            print("Verifier le choix")
 
         print("3 - Crackage du Hash")
         print("0 - Return")
