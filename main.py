@@ -1,7 +1,22 @@
-import getpass , base64 , hashlib
+import getpass, base64, hashlib, os.path, re,
+
+regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+
+def check(email):
+    if (re.search(regex, email)):
+        print("Valid Email")
+        return True
+    else:
+        print("Invalid Email")
+        return False
 
 print("To use the application you have to enter you email and password :")
-email = input("Enter you email ")
+verif = True
+while verif:
+    email = input("Enter you email ")
+    if check(email) == True:
+        break
+
 password = getpass.getpass()
 print(""" ____    ___                    __      __                               
 /\  _`\ /\_ \                  /\ \    /\ \                              
@@ -10,6 +25,8 @@ print(""" ____    ___                    __      __
   \ \ \L\ \\_\ \_/\ \L\.\_/\ \__/\ \ \\`\\ \ \L\ \ \ \_\ \ \ \/ /\ \/\ \ 
    \ \____//\____\ \__/.\_\ \____\\ \_\ \_\ \_,__/\ \____/\ \_\ \ \_\ \_\
     \/___/ \/____/\/__/\/_/\/____/ \/_/\/_/\/___/  \/___/  \/_/  \/_/\/_/""")
+
+
 def crackDictionaireSha1():
     dict_file = input("Saire le path de la dictionnaire : ")
     hashed = input("Saisire le Hash : ")
@@ -21,36 +38,47 @@ def crackDictionaireSha1():
                 return ""
     print("Failed to crack the hash!")
 
+
 def crackDictionaireMD5():
     dict_file = input("Saire le path de la dictionnaire : ")
     hashed = input("Saisire le Hash : ")
-    with open(dict_file) as fileobj:
+    # msg = input("Saisir taxte")
+    # hashed = hashlib.md5(msg.encode())
+    f = open(dict_file, "r")
+    with f as fileobj:
+        lines = f.readlines()
         for line in fileobj:
-            line = line.strip()
-            if hashlib.md5(line).hexdigest() == hashed :
-                print("Successfully cracked the hash %s: It's %s" % (hashed, line))
+            # line = line.strip()
+            if line.split(' '[1]) == hashed:
+                print("Successfully cracked the hash %s: It's %s" % (hashed, line.split(' '[1])))
                 return ""
     print("Failed to crack the file.")
+
+
 def crackDictionaireSHA256():
     dict_file = input("Saire le path de la dictionnaire : ")
     hashed = input("Saisire le Hash : ")
     with open(dict_file) as fileobj:
         for line in fileobj:
             line = line.strip()
-            if hashlib.sha256(line).hexdigest() == hashed :
+            if hashlib.sha256(line).hexdigest() == hashed:
                 print("Successfully cracked the hash %s: It's %s" % (hashed, line))
                 return ""
     print("Failed to crack the file.")
+
+
 def crackDictionaireSHA512():
     dict_file = input("Saire le path de la dictionnaire : ")
     hashed = input("Saisire le Hash : ")
     with open(dict_file) as fileobj:
         for line in fileobj:
             line = line.strip()
-            if hashlib.sha512(line).hexdigest() == hashed :
+            if hashlib.sha512(line).hexdigest() == hashed:
                 print("Successfully cracked the hash %s: It's %s" % (hashed, line))
                 return ""
     print("Failed to crack the file.")
+
+
 def menu_principal():
     print("Welcome")
     print("1 - Codage et decodage d'un message")
@@ -72,7 +100,7 @@ def menu_principal():
             print("Coisir le type de codage ")
             print("1 - Codage Base64")
             choix == input()
-            if(choix == "1"):
+            if (choix == "1"):
                 msg = input("Sasir le txt")
                 msgbyte = msg.encode('ascii')
                 msgCrypte = base64.b64encode(msgbyte)
@@ -82,7 +110,7 @@ def menu_principal():
             print("1 - Decodage base64")
             choix = input("Choisir le type de decodage ")
 
-            if(choix == "1"):
+            if (choix == "1"):
                 base64_message = input("Sasir le txate : ")
                 base64_bytes = base64_message.encode('ascii')
                 message_bytes = base64.b64decode(base64_bytes)
@@ -135,8 +163,6 @@ def menu_principal():
             crackDictionaireMD5()
         else:
             print("Verifier le choix")
-
-        print("3 - Crackage du Hash")
         print("0 - Return")
     elif choix == "4":
         print("Chiffrement et dechiffrement symetrique d'un message")
