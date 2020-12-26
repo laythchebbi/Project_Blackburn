@@ -1,5 +1,4 @@
-import getpass, base64, hashlib, os.path, re,
-
+import getpass, base64, hashlib, os.path, re
 regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
 def check(email):
@@ -9,6 +8,8 @@ def check(email):
     else:
         print("Invalid Email")
         return False
+
+
 
 print("To use the application you have to enter you email and password :")
 verif = True
@@ -34,7 +35,7 @@ def crackDictionaireSha1():
         for line in fileobj:
             line = line.strip()
             if hashlib.sha1(line.encode()).hexdigest() == hashed:
-                print("The passssswoooord is %s") % (line);
+                print("The password is %s") % (line);
                 return ""
     print("Failed to crack the hash!")
 
