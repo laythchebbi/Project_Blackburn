@@ -1,5 +1,45 @@
-import getpass, base64, hashlib, os.path, re
+import getpass, base64, hashlib, os.path, re, sqlite3
+
 regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+
+
+def login():
+    while True:
+        email = input("Saisir votre email")
+
+        password = getpass.getpass("Saisir mot de passe")
+        with sqlite3.connect('mydb.db') as db:
+            cursor = db.cursor()
+        find_user = ("SELECT * FROM users WHERE email=? AND password=?")
+        cursor.execute(find_user, [(email), (password)])
+        result = cursor.fetchall()
+        if result:
+            for i in result:
+                print("welcome " + i[2])
+                break
+        else:
+            print("wrong email or password")
+
+
+def inscrit():
+    verif = True
+    while verif:
+        email = input("Enter you email ")
+        if check(email) == True:
+            break
+    password = input("Donner un mot de passe")
+
+    with sqlite3.connect('mydb3.db') as db:
+        cursor = db.cursor()
+
+    cursor.execute('CREATE TABLE IF NOT EXISTS users (email VARCHAR,password VARCHAR)')
+
+    req = ("""
+    INSERT INTO users(email,password) values (?,?)
+    """)
+    cursor.execute(req, [(email), (password)])
+    db.commit()
+
 
 def check(email):
     if (re.search(regex, email)):
@@ -8,7 +48,6 @@ def check(email):
     else:
         print("Invalid Email")
         return False
-
 
 
 print("To use the application you have to enter you email and password :")
@@ -181,4 +220,6 @@ def menu_principal():
         print("Verifier le choix svp")
 
 
+inscrit()
+login()
 menu_principal()
