@@ -6,16 +6,16 @@ regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 def login():
     while True:
         email = input("Saisir votre email")
-
         password = getpass.getpass("Saisir mot de passe")
-        with sqlite3.connect('mydb.db') as db:
+        with sqlite3.connect('mydb3.db') as db:
             cursor = db.cursor()
-        find_user = ("SELECT * FROM users WHERE email=? AND password=?")
-        cursor.execute(find_user, [(email), (password)])
+        find_user = "SELECT * FROM users WHERE email = ? AND password = ?"
+        cursor.execute(find_user, [email, password])
         result = cursor.fetchall()
         if result:
             for i in result:
                 print("welcome " + i[2])
+                menu_principal()
                 break
         else:
             print("wrong email or password")
@@ -43,28 +43,27 @@ def inscrit():
 
 def check(email):
     if (re.search(regex, email)):
-        print("Valid Email")
         return True
     else:
         print("Invalid Email")
         return False
 
 
-print("To use the application you have to enter you email and password :")
-verif = True
-while verif:
-    email = input("Enter you email ")
-    if check(email) == True:
-        break
+#print("To use the application you have to enter you email and password :")
+#verif = True
+#while verif:
+#    email = input("Enter you email ")
+#    if check(email) == True:
+#        break
 
-password = getpass.getpass()
-print(""" ____    ___                    __      __                               
-/\  _`\ /\_ \                  /\ \    /\ \                              
-\ \ \L\ \//\ \      __      ___\ \ \/'\\ \ \____  __  __  _ __    ___    
- \ \  _ <'\ \ \   /'__`\   /'___\ \ , < \ \ '__`\/\ \/\ \/\`'__\/' _ `\  
-  \ \ \L\ \\_\ \_/\ \L\.\_/\ \__/\ \ \\`\\ \ \L\ \ \ \_\ \ \ \/ /\ \/\ \ 
-   \ \____//\____\ \__/.\_\ \____\\ \_\ \_\ \_,__/\ \____/\ \_\ \ \_\ \_\
-    \/___/ \/____/\/__/\/_/\/____/ \/_/\/_/\/___/  \/___/  \/_/  \/_/\/_/""")
+#password = getpass.getpass()
+# print(""" ____    ___                    __      __
+# /\  _`\ /\_ \                  /\ \    /\ \
+# \ \ \L\ \//\ \      __      ___\ \ \/'\\ \ \____  __  __  _ __    ___
+#  \ \  _ <'\ \ \   /'__`\   /'___\ \ , < \ \ '__`\/\ \/\ \/\`'__\/' _ `\
+#   \ \ \L\ \\_\ \_/\ \L\.\_/\ \__/\ \ \\`\\ \ \L\ \ \ \_\ \ \ \/ /\ \/\ \
+#    \ \____//\____\ \__/.\_\ \____\\ \_\ \_\ \_,__/\ \____/\ \_\ \ \_\ \_\
+#     \/___/ \/____/\/__/\/_/\/____/ \/_/\/_/\/___/  \/___/  \/_/  \/_/\/_/""")
 
 
 def crackDictionaireSha1():
@@ -222,4 +221,4 @@ def menu_principal():
 
 inscrit()
 login()
-menu_principal()
+#menu_principal()
