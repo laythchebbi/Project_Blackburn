@@ -1,7 +1,10 @@
-import getpass , base64 , hashlib
+import getpass , base64 , hashlib , os.path, validate_email
+
 
 print("To use the application you have to enter you email and password :")
 email = input("Enter you email ")
+
+
 password = getpass.getpass()
 print(""" ____    ___                    __      __                               
 /\  _`\ /\_ \                  /\ \    /\ \                              
@@ -11,46 +14,64 @@ print(""" ____    ___                    __      __
    \ \____//\____\ \__/.\_\ \____\\ \_\ \_\ \_,__/\ \____/\ \_\ \ \_\ \_\
     \/___/ \/____/\/__/\/_/\/____/ \/_/\/_/\/___/  \/___/  \/_/  \/_/\/_/""")
 def crackDictionaireSha1():
-    dict_file = input("Saire le path de la dictionnaire : ")
-    hashed = input("Saisire le Hash : ")
-    with open(dict_file) as fileobj:
-        for line in fileobj:
-            line = line.strip()
-            if hashlib.sha1(line.encode()).hexdigest() == hashed:
-                print("The passssswoooord is %s") % (line);
-                return ""
-    print("Failed to crack the hash!")
-
+    dict_file = input("Saisire le path de la dictionnaire : ")
+    if os.path.isfile(dict_file):
+        hashed = input("Saisire le Hash : ")
+        with open(dict_file) as fileobj:
+            for line in fileobj:
+                line = line.strip()
+                if hashlib.sha1(line.encode()).hexdigest() == hashed:
+                    print("The passsword is %s") % (line);
+                    return ""
+        print("Failed to crack the hash!")
+    else :
+        print("verifier le chemin du dictionnaire")
 def crackDictionaireMD5():
     dict_file = input("Saire le path de la dictionnaire : ")
-    hashed = input("Saisire le Hash : ")
-    with open(dict_file) as fileobj:
-        for line in fileobj:
-            line = line.strip()
-            if hashlib.md5(line).hexdigest() == hashed :
-                print("Successfully cracked the hash %s: It's %s" % (hashed, line))
-                return ""
-    print("Failed to crack the file.")
+    if os.path.isfile(dict_file):
+        msg = input("Saisir taxte")
+        hashed = hashlib.md5(msg.encode())
+        print(hashed.hexdigest())
+
+        with open(dict_file) as fileobj:
+            for line in fileobj:
+                line = line.strip()
+                if hashlib.md5(line).hexdigest() == hashed:
+                    print("Successfully cracked the hash %s: It's %s" % (hashed, line))
+                    return ""
+        print("Failed to crack the file.")
+    else:
+        print("verifier le chemin du dictionnaire")
 def crackDictionaireSHA256():
     dict_file = input("Saire le path de la dictionnaire : ")
-    hashed = input("Saisire le Hash : ")
-    with open(dict_file) as fileobj:
-        for line in fileobj:
-            line = line.strip()
-            if hashlib.sha256(line).hexdigest() == hashed :
-                print("Successfully cracked the hash %s: It's %s" % (hashed, line))
-                return ""
-    print("Failed to crack the file.")
+    if os.path.isfile(dict_file):
+        hashed = input("Saisire le Hash : ")
+        with open(dict_file) as fileobj:
+            for line in fileobj:
+                line = line.strip()
+                if hashlib.sha256(line).hexdigest() == hashed :
+                    print("Successfully cracked the hash %s: It's %s" % (hashed, line))
+                    return ""
+        print("Failed to crack the file.")
+    else:
+        print("verifier le chemin du dictionnaire")
 def crackDictionaireSHA512():
     dict_file = input("Saire le path de la dictionnaire : ")
-    hashed = input("Saisire le Hash : ")
-    with open(dict_file) as fileobj:
-        for line in fileobj:
-            line = line.strip()
-            if hashlib.sha512(line).hexdigest() == hashed :
-                print("Successfully cracked the hash %s: It's %s" % (hashed, line))
-                return ""
-    print("Failed to crack the file.")
+    if os.path.isfile(dict_file):
+        hashed = input("Saisire le Hash : ")
+        with open(dict_file) as fileobj:
+            for line in fileobj:
+                line = line.strip()
+                if hashlib.sha512(line).hexdigest() == hashed :
+                    print("Successfully cracked the hash %s: It's %s" % (hashed, line))
+                    return ""
+        print("Failed to crack the file.")
+    else:
+        print("verifier le chemin du dictionnaire")
+
+
+
+
 def menu_principal():
     print("Welcome")
     print("1 - Codage et decodage d'un message")
@@ -83,7 +104,7 @@ def menu_principal():
             choix = input("Choisir le type de decodage ")
 
             if(choix == "1"):
-                base64_message = input("Sasir le txate : ")
+                base64_message = input("Saisire le txate : ")
                 base64_bytes = base64_message.encode('ascii')
                 message_bytes = base64.b64decode(base64_bytes)
                 message = message_bytes.decode('ascii')
