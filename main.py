@@ -14,7 +14,7 @@ def login():
         result = cursor.fetchall()
         if result:
             for i in result:
-                print("welcome " + i[2])
+                print("welcome " + i[0])
                 menu_principal()
                 break
         else:
@@ -221,4 +221,4 @@ def menu_principal():
 
 inscrit()
 login()
-#menu_principal()
+
