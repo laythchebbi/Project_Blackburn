@@ -67,55 +67,70 @@ def check(email):
 
 
 def crackDictionaireSha1():
+    res = 0
     dict_file = input("Saire le path de la dictionnaire : ")
-    hashed = input("Saisire le Hash : ")
-    with open(dict_file) as fileobj:
-        for line in fileobj:
-            line = line.strip()
-            if hashlib.sha1(line.encode()).hexdigest() == hashed:
-                print("The password is %s") % (line);
-                return ""
-    print("Failed to crack the hash!")
+    msg = input("donner")
+
+    with open(dict_file, 'r') as filin:
+        lignes = filin.readlines()
+        for ligne in lignes:
+            mots = ligne.split(" ")
+            if msg == mots[1]:
+                print(mots[0])
+                res = 1
+                break
+    if res == 0:
+        print("Failed to crack the file.")
 
 
 def crackDictionaireMD5():
+    res = 0
     dict_file = input("Saire le path de la dictionnaire : ")
-    hashed = input("Saisire le Hash : ")
-    # msg = input("Saisir taxte")
-    # hashed = hashlib.md5(msg.encode())
-    f = open(dict_file, "r")
-    with f as fileobj:
-        lines = f.readlines()
-        for line in fileobj:
-            # line = line.strip()
-            if line.split(' '[1]) == hashed:
-                print("Successfully cracked the hash %s: It's %s" % (hashed, line.split(' '[1])))
-                return ""
-    print("Failed to crack the file.")
+    msg = input("donner")
+
+    with open(dict_file, 'r') as filin:
+        lignes = filin.readlines()
+        for ligne in lignes:
+            mots = ligne.split(" ")
+            if msg == mots[1]:
+                print(mots[0])
+                res = 1
+                break
+    if res == 0:
+        print("Failed to crack the file.")
 
 
 def crackDictionaireSHA256():
+    res = 0
     dict_file = input("Saire le path de la dictionnaire : ")
-    hashed = input("Saisire le Hash : ")
-    with open(dict_file) as fileobj:
-        for line in fileobj:
-            line = line.strip()
-            if hashlib.sha256(line).hexdigest() == hashed:
-                print("Successfully cracked the hash %s: It's %s" % (hashed, line))
-                return ""
-    print("Failed to crack the file.")
+    msg = input("donner")
 
+    with open(dict_file, 'r') as filin:
+        lignes = filin.readlines()
+        for ligne in lignes:
+            mots = ligne.split(" ")
+            if msg == mots[1]:
+                print(mots[0])
+                res = 1
+                break
+    if res == 0:
+        print("Failed to crack the file.")
 
 def crackDictionaireSHA512():
+    res = 0
     dict_file = input("Saire le path de la dictionnaire : ")
-    hashed = input("Saisire le Hash : ")
-    with open(dict_file) as fileobj:
-        for line in fileobj:
-            line = line.strip()
-            if hashlib.sha512(line).hexdigest() == hashed:
-                print("Successfully cracked the hash %s: It's %s" % (hashed, line))
-                return ""
-    print("Failed to crack the file.")
+    msg = input("donner")
+
+    with open(dict_file, 'r') as filin:
+        lignes = filin.readlines()
+        for ligne in lignes:
+            mots = ligne.split(" ")
+            if msg == mots[1]:
+                print(mots[0])
+                res = 1
+                break
+    if res == 0:
+        print("Failed to crack the file.")
 
 
 def menu_principal():
