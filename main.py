@@ -1,7 +1,39 @@
 import getpass, base64, hashlib, os.path, re, sqlite3
+from  cryptography.fernet import Fernet
 
 regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
+def AES_Encryption():
+    # Use Fernet to generate the key file.
+    key = Fernet.generate_key()
+    # Store the file to disk to be accessed for en/de:crypting later.
+    with open('secret.key', 'wb') as new_key_file:
+        new_key_file.write(key)
+    print(key)
+
+    msg = input("Saisie le text pour chiffre")
+    # Encode this as bytes to feed into the algorithm.
+    # (Refer to Encoding types above).
+    msg = msg.encode()
+
+    # Instantiate the object with your key.
+    f = Fernet(key)
+    # Pass your bytes type message into encrypt.
+    ciphertext = f.encrypt(msg)
+    print(ciphertext)
+
+def AES_Decryption():
+    # Load the private key from a file.
+    with open('secret.key', 'rb') as my_private_key:
+        key = my_private_key.read()
+    # Instantiate Fernet on the recip system.
+    f = Fernet(key)
+    ciphertext = bytes(input("Saisie le cipher "), 'utf-8')
+    # Decrypt the message.
+    cleartext = f.decrypt(ciphertext)
+    # Decode the bytes back into a string.
+    cleartext = cleartext.decode()
+    print(cleartext)
 
 def login():
     while True:
