@@ -20,7 +20,6 @@ def login():
         else:
             print("wrong email or password")
 
-
 def inscrit():
     verif = True
     while verif:
