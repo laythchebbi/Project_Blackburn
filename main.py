@@ -1,6 +1,25 @@
 import getpass, base64, hashlib, os.path, re, sqlite3
 from  cryptography.fernet import Fernet
+from Crypto.Cipher import DES
 
+def pad(text):
+    n = len(text) % 8
+    return text + (b' ' * n)
+def DES_encryption():
+    key = b'hello123'
+    text1 = b'Python is the Best Language!'
+    des = DES.new(key, DES.MODE_ECB)
+    padded_text = pad(text1)
+    encrypted_text = des.encrypt(padded_text)
+    print(base64.b64encode(encrypted_text).decode("latin-1"))
+def DES_decryption():
+    key = b'hello123'
+    des = DES.new(key, DES.MODE_ECB)
+    enc = input()
+    enc = base64.b64decode(enc.encode("latin-1"))
+    print(des.decrypt(enc))
+    
+    
 regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
 def AES_Encryption():
@@ -251,9 +270,39 @@ def menu_principal():
         print("0 - Return")
     elif choix == "4":
         print("Chiffrement et dechiffrement symetrique d'un message")
-        print("1 - Saisir le message a chiffré")
-        print("2 - Saisir le message chiffré")
+        print("1 - AES")
+        print("2 - DES")
         print("0 - Return")
+        choix = input("Saisir votre choix \n")
+        if choix == "1":
+            print("Chiffrement AES")
+            print("1 - Chiffrement")
+            print("2 - Dechiffrement")
+            print("0 - Return")
+            choix = input("Saisir votre choix")
+            if choix == "1":
+                AES_Encryption()
+            elif choix == "2":
+                AES_Decryption()
+            elif choix == "0":
+                pass
+            else:
+                print("Error")
+        elif choix == "2":
+            print("Chiffrement DES")
+            print("1 - Chiffrement")
+            print("2 - Dechiffrement")
+            print("0 - Return")
+            choix = input("Saisir votre choix")
+            if choix == "1":
+                DES_encryption()
+            elif choix == "2":
+                DES_decryption()
+            elif choix == "0":
+                pass
+            else:
+                print("Error")
+
     elif choix == "5":
         print("Chiffrement et dechiffrement asymetrique")
         print("1 - Saisir le message a chiffré")
@@ -267,4 +316,3 @@ def menu_principal():
 
 inscrit()
 login()
-
