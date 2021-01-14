@@ -406,5 +406,14 @@ def menu_principal():
         exit()
     else:
         print("Verifier le choix svp")
-inscrit()
-login()
+
+print("""Bonjour si vous voulez utlilise l'app vous devez avoir un compt si vous avez un compte clicke 1 pour"
+       s'autentifié si vous n'avez pas un compte clicke 2 pour creer un compte\n""")
+choix  = input("Saisire votre choix  \n")
+if choix == "1":
+    login()
+elif choix == "2":
+    inscrit()
+    login()
+else:
+    print("Choix inconnue")
