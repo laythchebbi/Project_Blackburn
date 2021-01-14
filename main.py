@@ -370,7 +370,7 @@ def menu_principal():
         print("1 - RSA")
         print("2 - ElGamal")
         print("0 - Return")
-        choix = input("Saisir votre choix")
+        choix = input("Saisir votre choix \n")
         if choix == "1":
             print("RSA")
             print("1 - Chiffrement")
@@ -407,8 +407,8 @@ def menu_principal():
     else:
         print("Verifier le choix svp")
 
-print("""Bonjour si vous voulez utlilise l'app vous devez avoir un compt si vous avez un compte clicke 1 pour"
-       s'autentifié si vous n'avez pas un compte clicke 2 pour creer un compte\n""")
+print("""Bonjour si vous voulez utlilise l'app vous devez avoir un compte si vous avez un compte clicke 1 pour"
+s'autentifié si vous n'avez pas un compte clicke 2 pour creer un compte\n""")
 choix  = input("Saisire votre choix  \n")
 if choix == "1":
     login()
