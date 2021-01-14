@@ -1,7 +1,44 @@
 import getpass, base64, hashlib, os.path, re, sqlite3
 from  cryptography.fernet import Fernet
-from Crypto.Cipher import DES
+from  Crypto.Cipher import DES
 from elgamal.elgamal import Elgamal
+import base64
+
+import rsa
+from pathlib import Path
+def generate_keys():
+    print("Generating keys...")
+    (pubkey, privkey) = rsa.newkeys(2048)
+    # print(pubkey)
+    # write the public key to a file #
+    publickey = open('pubkey.key', 'wb')
+    publickey.write(pubkey.save_pkcs1('PEM'))
+    publickey.close()
+    prkey = open('privkey.key', 'wb')
+    prkey.write(privkey.save_pkcs1('PEM'))
+    prkey.close()
+    return pubkey, privkey
+def RSA_Encryption():
+    message = input("input the message to encrypt: ").encode()
+    with open('pubkey.key', mode='rb') as file:
+        keydata = file.read()
+    pubkey = rsa.PublicKey.load_pkcs1(keydata)
+    crypto = rsa.encrypt(message, pubkey)
+    print(base64.b64encode(crypto).decode("latin-1") if base64.encode else crypto)
+    
+    with open('privkey.key', mode='rb') as file:
+        keydata = file.read()
+    privkey = rsa.PrivateKey.load_pkcs1(keydata)
+    decrypted = rsa.decrypt(crypto, privkey).decode()
+    print(decrypted)
+def RSA_Decryption():
+    message = input("input the message to Decrypt: ")
+    message = base64.b64decode(message.encode("latin-1"))
+    with open('privkey.key', mode='rb') as file:
+        keydata = file.read()
+    privkey = rsa.PrivateKey.load_pkcs1(keydata)
+    crypto = rsa.decrypt(message, privkey).decode()
+    print(crypto)
 
 def ElGamal_Encryption():
     m = bytes(input("Saisir le texte a chiffre \n"),encoding="utf-8")
@@ -14,7 +51,7 @@ def ElGamal_Encryption():
     print(ct)
 def ElGamal_Decryption():
     ct = input("Saisir le texte a chiffre \n")
-    pv = PrivateKey(input("Saisir le cle prive a chiffre \n"))
+    pv = (input("Saisir le cle prive a chiffre \n"))
     dd = Elgamal.decrypt(ct, pv)
     print(dd)
     print()
@@ -45,7 +82,7 @@ def AES_Encryption():
     # Store the file to disk to be accessed for en/de:crypting later.
     with open('secret.key', 'wb') as new_key_file:
         new_key_file.write(key)
-    print(key)
+    #print(key)
 
     msg = input("Saisie le text pour chiffre")
     # Encode this as bytes to feed into the algorithm.
@@ -72,9 +109,10 @@ def AES_Decryption():
     print(cleartext)
 
 def login():
+    print("Interface de login:\n")
     while True:
-        email = input("Saisir votre email")
-        password = getpass.getpass("Saisir mot de passe")
+        email = input("Saisir votre email\n")
+        password = getpass.getpass("Saisir mot de passe\n")
         with sqlite3.connect('mydb3.db') as db:
             cursor = db.cursor()
         find_user = "SELECT * FROM users WHERE email = ? AND password = ?"
@@ -91,10 +129,10 @@ def login():
 def inscrit():
     verif = True
     while verif:
-        email = input("Enter you email ")
+        email = input("Enter you email \n")
         if check(email) == True:
             break
-    password = input("Donner un mot de passe")
+    password = input("Donner un mot de passe\n")
 
     with sqlite3.connect('mydb3.db') as db:
         cursor = db.cursor()
@@ -135,7 +173,7 @@ def check(email):
 
 def crackDictionaireSha1():
     res = 0
-    dict_file = input("Saire le path de la dictionnaire : ")
+    dict_file = input("Saire le path de la dictionnaire : \n")
     msg = input("donner")
 
     with open(dict_file, 'r') as filin:
@@ -147,13 +185,13 @@ def crackDictionaireSha1():
                 res = 1
                 break
     if res == 0:
-        print("Failed to crack the file.")
+        print("Failed to crack the file.\n")
 
 
 def crackDictionaireMD5():
     res = 0
-    dict_file = input("Saire le path de la dictionnaire : ")
-    msg = input("donner")
+    dict_file = input("Saire le path de la dictionnaire : \n")
+    msg = input("donner\n")
 
     with open(dict_file, 'r') as filin:
         lignes = filin.readlines()
@@ -164,13 +202,13 @@ def crackDictionaireMD5():
                 res = 1
                 break
     if res == 0:
-        print("Failed to crack the file.")
+        print("Failed to crack the file.\n")
 
 
 def crackDictionaireSHA256():
     res = 0
-    dict_file = input("Saire le path de la dictionnaire : ")
-    msg = input("donner")
+    dict_file = input("Saire le path de la dictionnaire : \n")
+    msg = input("donner\n")
 
     with open(dict_file, 'r') as filin:
         lignes = filin.readlines()
@@ -181,12 +219,12 @@ def crackDictionaireSHA256():
                 res = 1
                 break
     if res == 0:
-        print("Failed to crack the file.")
+        print("Failed to crack the file.\n")
 
 def crackDictionaireSHA512():
     res = 0
-    dict_file = input("Saire le path de la dictionnaire : ")
-    msg = input("donner")
+    dict_file = input("Saire le path de la dictionnaire : \n")
+    msg = input("donner\n")
 
     with open(dict_file, 'r') as filin:
         lignes = filin.readlines()
@@ -202,6 +240,12 @@ def crackDictionaireSHA512():
 
 def menu_principal():
     print("Welcome")
+    print("""
+ ____ ____ ____ ____ ____ ____ ____ ____ ____ 
+||B |||l |||a |||c |||k |||b |||u |||r |||n ||
+||__|||__|||__|||__|||__|||__|||__|||__|||__||
+|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|
+""")
     print("1 - Codage et decodage d'un message")
     print("2 - Hashage d'un message")
     print("3 - Crackage d'un message hashé")
@@ -222,17 +266,16 @@ def menu_principal():
             print("1 - Codage Base64")
             choix == input()
             if (choix == "1"):
-                msg = input("Sasir le txt")
+                msg = input("Sasir le texte a coder\n")
                 msgbyte = msg.encode('ascii')
                 msgCrypte = base64.b64encode(msgbyte)
                 print(msgCrypte)
         elif choix == "2":
             print("decodage")
             print("1 - Decodage base64")
-            choix = input("Choisir le type de decodage ")
-
+            choix = input("Choisir le type de decodage \n")
             if (choix == "1"):
-                base64_message = input("Sasir le txate : ")
+                base64_message = input("Sasir le texte a decoder : \n")
                 base64_bytes = base64_message.encode('ascii')
                 message_bytes = base64.b64decode(base64_bytes)
                 message = message_bytes.decode('ascii')
@@ -248,32 +291,34 @@ def menu_principal():
         print("2 - SHA256")
         print("3 - SHA512")
         print("4 - MD5")
+        print("0 - Return")
         choix = input()
         if choix == "1":
-            msg = input("Saisir taxte")
+            msg = input("Saisir texte : \n")
             msghashe = hashlib.sha1(msg.encode())
             print(msghashe.hexdigest())
         elif choix == "2":
-            msg = input("Saisir taxte")
+            msg = input("Saisir text \n")
             msghashe = hashlib.sha256(msg.encode())
             print(msghashe.hexdigest())
         elif choix == "3":
-            msg = input("Saisir taxte")
+            msg = input("Saisir texte \n")
             msghashe = hashlib.sha512(msg.encode())
             print(msghashe.hexdigest())
         elif choix == "4":
-            msg = input("Saisir taxte")
+            msg = input("Saisir texte \n")
             msghashe = hashlib.md5(msg.encode())
             print(msghashe.hexdigest())
-        print("0 - Return")
-
+        elif choix == "0":
+            menu_principal()
     elif choix == "3":
         print("Crackage d'un message hashé")
         print("1 - SHA1")
         print("2 - SHA256")
         print("3 - SHA512")
         print("4 - MD5")
-        choix = input("Choisire le type Hash")
+        print("0 - Return")
+        choix = input("Choisire le type Hash \n")
         if choix == "1":
             crackDictionaireSha1()
         elif choix == "2":
@@ -282,9 +327,10 @@ def menu_principal():
             crackDictionaireSHA512()
         elif choix == "4":
             crackDictionaireMD5()
+        elif choix == "0":
+            menu_principal()
         else:
             print("Verifier le choix")
-        print("0 - Return")
     elif choix == "4":
         print("Chiffrement et dechiffrement symetrique d'un message")
         print("1 - AES")
@@ -296,13 +342,48 @@ def menu_principal():
             print("1 - Chiffrement")
             print("2 - Dechiffrement")
             print("0 - Return")
-            choix = input("Saisir votre choix")
+            choix = input("Saisir votre choix \n")
             if choix == "1":
                 AES_Encryption()
             elif choix == "2":
                 AES_Decryption()
             elif choix == "0":
+                menu_principal()
+            else:
+                print("Error")
+        elif choix == "2":
+            print("Chiffrement DES")
+            print("1 - Chiffrement")
+            print("2 - Dechiffrement")
+            print("0 - Return")
+            choix = input("Saisir votre choix")
+            if choix == "1":
+                DES_encryption()
+            elif choix == "2":
+                DES_decryption()
+            elif choix == "0":
                 pass
+            else:
+                print("Error")
+    elif choix == "5":
+        print("Chiffrement et dechiffrement asymetrique")
+        print("1 - RSA")
+        print("2 - ElGamal")
+        print("0 - Return")
+        choix = input("Saisir votre choix")
+        if choix == "1":
+            print("RSA")
+            print("1 - Chiffrement")
+            print("2 - Dechiffrement")
+            print("0 - Return")
+            choix = input("Saisir votre choix \n")
+            if choix == "1":
+                generate_keys()
+                RSA_Encryption()
+            elif choix == "2":
+                ElGamal_Decryption()
+            elif choix == "0":
+                menu_principal()
             else:
                 print("Error")
         elif choix == "2":
@@ -310,26 +391,20 @@ def menu_principal():
             print("1 - Chiffrement")
             print("2 - Dechiffrement")
             print("0 - Return")
-            choix = input("Saisir votre choix")
+            choix = input("Saisir votre choix \n")
             if choix == "1":
                 ElGamal_Encryption()
             elif choix == "2":
                 ElGamal_Decryption()
             elif choix == "0":
-                pass
+                menu_principal()
             else:
                 print("Error")
-
-    elif choix == "5":
-        print("Chiffrement et dechiffrement asymetrique")
-        print("1 - Saisir le message a chiffré")
-        print("2 - Saisir le message chiffré")
-        print("0 - Return")
+        elif choix == "0":
+            menu_principal()
     elif choix == "Q" or "q":
         exit()
     else:
         print("Verifier le choix svp")
-
-
 inscrit()
 login()
