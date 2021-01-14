@@ -1,6 +1,67 @@
 import getpass, base64, hashlib, os.path, re, sqlite3
 from  cryptography.fernet import Fernet
 from Crypto.Cipher import DES
+import base64
+import rsa
+from elgamal.elgamal import Elgamal
+
+def ElGamal_Encryption():
+    m = bytes(input("Saisir le texte a chiffre \n"),encoding="utf-8")
+    print(m)
+    print("Loading keys...")
+    pb, pv = Elgamal.newkeys(32)
+    print(pb)
+    print(type(pv))
+    ct = Elgamal.encrypt(m, pb)
+    print(ct)
+    
+def ElGamal_Decryption():
+    ct = input("Saisir le texte a chiffre \n")
+    pv = PrivateKey(input("Saisir le cle prive a chiffre \n"))
+    dd = Elgamal.decrypt(ct, pv)
+    print(dd)
+    print()
+    
+    
+def generate_keys():
+    (pubkey, privkey) = rsa.newkeys(2048)
+    # print(pubkey)
+    # write the public key to a file #
+    publickey = open('pubkey.key', 'wb')
+    publickey.write(pubkey.save_pkcs1('PEM'))
+    publickey.close()
+    prkey = open('privkey.key', 'wb')
+    prkey.write(privkey.save_pkcs1('PEM'))
+    prkey.close()
+    return pubkey, privkey
+
+
+# print(generate_keys()[0])
+
+
+def RSA_encrypt():
+    message = input("input the message to encrypt: ").encode()
+    with open('pubkey.key', mode='rb') as file:
+        keydata = file.read()
+    pubkey = rsa.PublicKey.load_pkcs1(keydata)
+    crypto = rsa.encrypt(message, pubkey)
+    print(base64.b64encode(crypto).decode("latin-1") if base64.encode else crypto)
+    # print(crypto)
+    with open('privkey.key', mode='rb') as file:
+        keydata = file.read()
+    privkey = rsa.PrivateKey.load_pkcs1(keydata)
+    decrypted = rsa.decrypt(crypto, privkey).decode()
+    
+
+
+def RSA_decrypt():
+    message = input("input the message to decrypt: ")
+    message = base64.b64decode(message.encode("latin-1"))
+    with open('privkey.key', mode='rb') as file:
+        keydata = file.read()
+    privkey = rsa.PrivateKey.load_pkcs1(keydata)
+    crypto = rsa.decrypt(message, privkey).decode()
+    print(crypto)
 
 def pad(text):
     n = len(text) % 8
@@ -305,14 +366,44 @@ def menu_principal():
 
     elif choix == "5":
         print("Chiffrement et dechiffrement asymetrique")
-        print("1 - Saisir le message a chiffré")
-        print("2 - Saisir le message chiffré")
+        print("1 - RSA")
+        print("2 - ELGAMAL")
         print("0 - Return")
+        choix = input("Saisir votre choix")
+            if choix == "1":
+                print("RSA")
+                print("Generating Keys...")
+                generate_keys()
+                print("1 - Chiffrement"):
+                print("2 - Dechiffrement")
+                choix = input("Saisir votre choix")
+                if choix == "1":
+                    RSA_encrypt()
+                elif choix == "2":
+                    RSA_decrypt()
+                elif choix == "0":
+                    pass
+                else:
+                    print("Erreur")
+            elif choix == "2":
+                 print("ELGAMAL")
+                print("Generating Keys...")
+                generate_keys()
+                print("1 - Chiffrement")
+                print("2 - Dechiffrement")
+                choix = input("Saisir votre choix")
+                if choix == "1":
+                    ElGamal_Encryption()
+                elif choix == "2":
+                    ElGamal_Decryption()
+                elif choix == "0":
+                    pass
+                else:
+                    print("Erreur")
     elif choix == "Q" or "q":
         exit()
     else:
         print("Verifier le choix svp")
-
-
+        
 inscrit()
 login()

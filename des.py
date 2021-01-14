@@ -1,8 +1,5 @@
 import base64
-
 import rsa
-from pathlib import Path
-
 
 def generate_keys():
     (pubkey, privkey) = rsa.newkeys(2048)
@@ -32,19 +29,17 @@ def rsa_encrypt():
         keydata = file.read()
     privkey = rsa.PrivateKey.load_pkcs1(keydata)
     decrypted = rsa.decrypt(crypto, privkey).decode()
-    print(decrypted)
+    
 
 
 def rsa_decrypt():
-    message = input("input the message to encrypt: ")
+    message = input("input the message to decrypt: ")
     message = base64.b64decode(message.encode("latin-1"))
     with open('privkey.key', mode='rb') as file:
         keydata = file.read()
     privkey = rsa.PrivateKey.load_pkcs1(keydata)
     crypto = rsa.decrypt(message, privkey).decode()
     print(crypto)
-
-
 
 generate_keys()
 rsa_encrypt()
