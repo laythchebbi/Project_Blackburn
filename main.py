@@ -1,10 +1,8 @@
-import getpass, base64, hashlib, os.path, re, sqlite3
+import getpass, base64, hashlib, os.path, re, sqlite3 , rsa
 from  cryptography.fernet import Fernet
 from  Crypto.Cipher import DES
 from elgamal.elgamal import Elgamal
 import base64
-
-import rsa
 from pathlib import Path
 def generate_keys():
     print("Generating keys...")
@@ -407,8 +405,8 @@ def menu_principal():
     else:
         print("Verifier le choix svp")
 
-print("""Bonjour si vous voulez utlilise l'app vous devez avoir un compte si vous avez un compte clicke 1 pour"
-s'autentifié si vous n'avez pas un compte clicke 2 pour creer un compte\n""")
+print("""Bonjour si vous souhaitez utiliser l'application vous devez avoir un compte si vous avez un compte cliquez sur 1 pour vous connecter
+si vous n'avez pas de compte cliquez sur 2 pour créer un compte\n""")
 choix  = input("Saisire votre choix  \n")
 if choix == "1":
     login()
